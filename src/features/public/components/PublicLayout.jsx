@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import Sidebar from "./Sidebar";
 
 const PublicLayout = () => {
   return (
@@ -9,6 +10,7 @@ const PublicLayout = () => {
       <Navbar />
       <Outlet />
       <Footer />
+      <Sidebar/>
     </div>
   );
 };
