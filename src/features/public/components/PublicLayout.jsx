@@ -6,7 +6,7 @@ import Sidebar from "./Sidebar";
 
 const PublicLayout = () => {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
       <Outlet />
       <Footer />
