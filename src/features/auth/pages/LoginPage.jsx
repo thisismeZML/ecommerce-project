@@ -1,6 +1,9 @@
+import { jwtDecode } from "jwt-decode";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import useCookie from "react-use-cookie";
 
 const LoginPage = () => {
   const {
@@ -9,8 +12,37 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm();
 
+  const [token, setToken] = useCookie("token");
+  const [user, setUser] = useCookie("user") 
+
+  const navigate = useNavigate();
+
   const onSubmit = async (data) => {
-    console.log(data);
+    const res = await fetch(`https://fakestoreapi.com/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+
+    const json = await res.json();
+    
+    console.log(json);
+
+    if(res.status === 200) {
+      setToken(json.token);
+      const decoded = jwtDecode(json.token);
+      const userId = decoded.sub;
+
+      const res = await fetch(`https://fakestoreapi.com/users/${userId}`);
+      const userData = await res.json();
+      console.log(userData);
+      setUser(JSON.stringify(userData));
+      navigate("/");
+    } else {
+      toast.error(json.message);
+    }
   };
 
   return (
@@ -57,6 +89,7 @@ const LoginPage = () => {
             </label>
             <input
               type="password"
+              autoComplete=""
               id="password"
               {...register("password", { required: "Password is required" })}
               placeholder="Enter your password"

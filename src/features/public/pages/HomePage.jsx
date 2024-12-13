@@ -3,6 +3,7 @@ import HeroSection from "../components/HeroSection";
 import FeaturesSection from "../components/FeaturesSection";
 import PromoSection from "../components/PromoSection";
 import CategoriesSection from "../components/CategoriesSection";
+import SecBanner from "./SecBanner";
 
 const HomePage = () => {
   return (
@@ -11,6 +12,7 @@ const HomePage = () => {
       <CategoriesSection/>
       <FeaturesSection />
       <PromoSection />
+      <SecBanner/>
     </div>
   );
 };

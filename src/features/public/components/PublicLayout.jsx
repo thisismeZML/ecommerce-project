@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Sidebar from "./Sidebar";
+import { Toaster } from "react-hot-toast";
 
 const PublicLayout = () => {
   return (
@@ -11,6 +12,7 @@ const PublicLayout = () => {
       <Outlet />
       <Footer />
       <Sidebar/>
+      <Toaster/>
     </div>
   );
 };

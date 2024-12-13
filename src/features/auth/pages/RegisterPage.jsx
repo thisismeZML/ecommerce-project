@@ -1,5 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
   const {
@@ -8,19 +10,63 @@ const RegisterPage = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    const payload = {
+      email: data.email,
+      username: data.username,
+      password: data.password,
+      name: {
+        firstname: data.firstname,
+        lastname: data.lastname,
+      },
+      address: {
+        city: data.city,
+        street: data.street,
+        number: parseInt(data.number, 10),
+        zipcode: data.zipcode,
+        geolocation: {
+          lat: data.lat,
+          long: data.long,
+        },
+      },
+      phone: data.phone,
+    };
+
+    console.log("Payload:", payload);
+
+    try {
+      const response = await fetch("https://fakestoreapi.com/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("User registered successfully:", result);
+        navigate(`/login`);
+        toast.success("Registration successful!");
+      } else {
+        console.error("Error during registration:", response.statusText);
+        toast.error("Registration failed.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred during registration.");
+    }
   };
 
   return (
     <div className="h-[90dvh] flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-3xl p-10 shadow-lg rounded-lg border border-gray-200 bg-white">
-        {/* Title */}
         <h2 className="text-3xl font-semibold text-center mb-6 text-black tracking-wider">
           Create an Account
         </h2>
 
-        {/* Form */}
         <form
           className="grid grid-cols-2 gap-6"
           onSubmit={handleSubmit(onSubmit)}
@@ -151,20 +197,26 @@ const RegisterPage = () => {
             )}
           </div>
 
-          {/* Remember Me */}
-          <div className="col-span-2 flex items-center">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              {...register("rememberMe")}
-              className="h-4 w-4 text-gray-500 border-gray-300 rounded"
-            />
-            <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-500">
-              Remember Me
+          {/* Additional Fields for Address */}
+          <div className="col-span-2 sm:col-span-1">
+            <label
+              htmlFor="city"
+              className="block text-sm font-medium text-gray-500"
+            >
+              City
             </label>
+            <input
+              type="text"
+              id="city"
+              {...register("city", { required: "City is required" })}
+              placeholder="Enter city"
+              className={`w-full border ${
+                errors.city ? "border-red-500" : "border-gray-300"
+              } px-4 py-2 mt-1 text-gray-900 focus:outline-none focus:ring focus:ring-gray-500 rounded`}
+            />
           </div>
+          {/* Add similar fields for `street`, `zipcode`, `lat`, and `long` */}
 
-          {/* Submit Button */}
           <div className="col-span-2">
             <button
               type="submit"
@@ -174,19 +226,6 @@ const RegisterPage = () => {
             </button>
           </div>
         </form>
-
-        {/* Footer Links */}
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-500">
-            Already have an account?{" "}
-            <a
-              href="/login"
-              className="font-medium text-gray-800 hover:underline"
-            >
-              Log in
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   );

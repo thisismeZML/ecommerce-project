@@ -5,6 +5,7 @@ import ShopPage from "../features/public/pages/ShopPage";
 import ContactusPage from "../features/public/pages/ContactusPage";
 import AboutusPage from "../features/public/pages/AboutusPage";
 import CartPage from "../features/public/pages/CartPage";
+import ProductDetailPage from "../features/public/pages/ProductDetailPage";
 
 const PublicRoute = [
   {
@@ -17,7 +18,16 @@ const PublicRoute = [
       },
       {
         path: "shop",
-        element: <ShopPage />,
+        children: [
+          {
+            index: true,
+            element: <ShopPage />,
+          },
+          {
+            path: ":id",
+            element: <ProductDetailPage />,
+          }
+        ],
       },
       {
         path: "cart",
